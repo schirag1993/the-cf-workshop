@@ -27,7 +27,7 @@ Resources:
                 ensureRunning: true
     Properties:
       ImageId: ami-b46f48db
-      InstanceType: m8.large
+      InstanceType: m5.large
       SecurityGroups:
         - !Ref securityGroup
       UserData:
