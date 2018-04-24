@@ -12,6 +12,7 @@ Parameters:
   GithubAccessToken:
     Description: Personal access token generated for Github
     Type: String
+    NoEcho: true
   BranchName:
     Description: The branch in version control to retrieve changes from
     Type: String
@@ -21,6 +22,12 @@ Parameters:
       The name of the application. This will be used as part of the name of the stack, as well as the name of the pipeline
     Type: String
     Default: webapp
+  PublicSubnetOneId:
+    Description: A public subnet Id to use for the load balancer
+    Type: AWS::EC2::Subnet::Id
+  PublicSubnetTwoId:
+    Description: A public subnet Id to use for the load balancer
+    Type: AWS::EC2::Subnet::Id
 
 Resources:
   ArtifactStoreBucket:
@@ -72,8 +79,11 @@ Resources:
                 RoleArn: !Sub ${CFNRole.Arn}
                 StackName: !Sub "${ApplicationName}-${BranchName}"
                 TemplatePath: "TemplateSource::templates/template.yaml"
-
-
+                ParameterOverrides: !Sub |
+                  {
+                    "PublicSubnetOneId": "${PublicSubnetOneId}",
+                    "PublicSubnetTwoId": "${PublicSubnetTwoId}"
+                  }
   CFNRole:
     Type: AWS::IAM::Role
     Properties:
